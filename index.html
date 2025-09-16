@@ -948,39 +948,41 @@
         }
       }
 
-      @media (max-width: 768px) {
-        .nav-toggle {
-          display: block;
-        }
+      /* Mobile view */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start; /* keep everything left-aligned */
+  }
 
-        .nav-links {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: rgba(0, 0, 0, 0.8);
-          backdrop-filter: var(--blur);
-          flex-direction: column;
-          padding: 2rem;
-          border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-          box-shadow: var(--shadow-lg);
-          transform: translateY(-100%);
-          opacity: 0;
-          visibility: hidden;
-          transition: var(--transition);
-        }
+  .logo {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
 
-        .nav-links.active {
-          transform: translateY(0);
-          opacity: 1;
-          visibility: visible;
-          color: var(--white);
-        }
+  .nav-toggle {
+    display: block;
+    margin-bottom: 1rem;
+    align-self: flex-start; /* ensures it's left-aligned under the logo */
+  }
 
-        .nav-links li {
-          width: 100%;
-          text-align: center;
-        }
+  .nav-links {
+    display: none; /* hidden until toggled */
+    flex-direction: column;
+    width: 100%;
+    background: var(--gray-900);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 0.5rem 0;
+  }
+}
 
         .search-container {
           order: 3;
