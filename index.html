@@ -73,7 +73,7 @@
       }
 
       .header.scrolled {
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(0, 0, 0, 0.8);
         box-shadow: var(--shadow-lg);
       }
 
@@ -527,30 +527,40 @@
         gap: 1rem;
         margin-bottom: 3rem;
         flex-wrap: wrap;
+        padding: 1rem;
+        background: rgba(
+          255,
+          255,
+          255,
+          0.05
+        ); /* subtle transparent background */
+        border-radius: 12px;
+        backdrop-filter: blur(6px); /* modern glass effect */
       }
 
       .filter-btn {
-        background: var(--gray-100);
-        border: 2px solid transparent;
-        color: var(--text);
-        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #ccc;
+        padding: 0.6rem 1.2rem;
         border-radius: 50px;
         cursor: pointer;
-        transition: var(--transition);
+        transition: all 0.3s ease;
         font-weight: 500;
-        font-size: 0.9rem;
-        white-space: nowrap;
+        font-size: 0.95rem;
       }
 
       .filter-btn:hover {
-        background: var(--gray-200);
-        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        transform: translateY(-2px);
       }
 
       .filter-btn.active {
-        background: var(--gradient-primary);
-        color: var(--white);
-        box-shadow: var(--shadow);
+        background: linear-gradient(135deg, #6c63ff, #7b5bff);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
       }
 
       .product-grid {
@@ -1523,7 +1533,7 @@
 
       // ===== MANAGERS =====
       const CategoryManager = {
-        init: () => {
+        init: function () {
           const grid = document.getElementById("categoryGrid");
           if (!window.PRODUCT_DATA) {
             console.error("Product data not loaded");
@@ -1556,7 +1566,8 @@
       };
 
       const ProductManager = {
-        loadProducts: (category = "all") => {
+        // Load products by category
+        loadProducts: function (category = "all") {
           const grid = document.getElementById("productGrid");
           grid.innerHTML = "";
 
@@ -1573,18 +1584,20 @@
             products = window.PRODUCT_DATA.products[category];
           }
 
+          // Apply search filter
           if (AppState.searchTerm) {
             products = this.filterBySearch(products, AppState.searchTerm);
           }
 
+          // Handle empty state
           if (products.length === 0) {
             grid.innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-light);">
-                            <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
-                            <h3>No products found</h3>
-                            <p>Try adjusting your search or browse different categories.</p>
-                        </div>
-                    `;
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-light);">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+          <h3>No products found</h3>
+          <p>Try adjusting your search or browse different categories.</p>
+        </div>
+      `;
           } else {
             products.forEach((product) => {
               const card = Components.createProductCard(product);
@@ -1592,10 +1605,11 @@
             });
           }
 
-          this.animateProductCards();
+          this.animateProductCards(grid);
         },
 
-        loadFeaturedProducts: () => {
+        // Load featured products
+        loadFeaturedProducts: function () {
           if (!window.PRODUCT_DATA) return;
 
           const featured = [
@@ -1613,10 +1627,11 @@
             grid.appendChild(card);
           });
 
-          this.animateProductCards();
+          this.animateProductCards(grid);
         },
 
-        filterBySearch: (products, searchTerm) => {
+        // Search filter
+        filterBySearch: function (products, searchTerm) {
           const term = searchTerm.toLowerCase();
           return products.filter(
             (product) =>
@@ -1628,9 +1643,10 @@
           );
         },
 
-        animateProductCards: () => {
+        // Animate product cards
+        animateProductCards: function (grid) {
           setTimeout(() => {
-            const cards = document.querySelectorAll(".product-card");
+            const cards = grid.querySelectorAll(".product-card");
             cards.forEach((card, index) => {
               card.style.opacity = "0";
               card.style.transform = "translateY(30px)";
@@ -1643,8 +1659,16 @@
             });
           }, 100);
         },
+        // Initial animation setup
+        setupAnimations: function () {
+          const grid = document.getElementById("productGrid");
+          if (grid) {
+            this.animateProductCards(grid);
+          }
+        },
 
-        getProductById: (productId) => {
+        // Find product by ID
+        getProductById: function (productId) {
           if (!window.PRODUCT_DATA) return null;
           for (const category of Object.values(window.PRODUCT_DATA.products)) {
             const product = category.find((p) => p.id === productId);
@@ -1655,7 +1679,7 @@
       };
 
       const FilterManager = {
-        init: () => {
+        init: function () {
           const container = document.getElementById("filterContainer");
           const filters = [
             { text: "All Products", value: "all", active: true },
@@ -1708,7 +1732,7 @@
       };
 
       const CartManager = {
-        addToCart: (productId) => {
+        addToCart(productId) {
           const product = ProductManager.getProductById(productId);
           if (!product) return;
 
@@ -1726,9 +1750,10 @@
             });
           }
 
-          this.updateCartUI();
+          // Update UI correctly
+          CartManager.updateCartUI();
 
-          // Add visual feedback
+          // Add visual feedback on button
           const button = document.querySelector(
             `[data-product-id="${productId}"] .add-to-cart`
           );
@@ -1744,17 +1769,20 @@
           );
         },
 
-        removeFromCart: (productId) => {
+        removeFromCart(productId) {
           AppState.cart = AppState.cart.filter((item) => item.id !== productId);
-          this.updateCartUI();
+          CartManager.updateCartUI();
         },
 
-        updateCartUI: () => {
-          document.getElementById("cartCount").textContent =
-            AppState.cart.length;
+        updateCartUI() {
+          const summary = CartManager.getCartSummary();
+          const cartCount = document.getElementById("cartCount");
+          if (cartCount) {
+            cartCount.textContent = summary.totalItems; // 👈 show total items, not unique
+          }
         },
 
-        getCartSummary: () => {
+        getCartSummary() {
           const total = AppState.cart.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
@@ -1772,7 +1800,7 @@
       };
 
       const WishlistManager = {
-        toggle: (productId) => {
+        toggle: function (productId) {
           const product = ProductManager.getProductById(productId);
           if (!product) return;
 
@@ -1796,7 +1824,7 @@
           this.updateWishlistUI();
         },
 
-        updateWishlistUI: () => {
+        updateWishlistUI: function () {
           // Update all wishlist buttons
           document.querySelectorAll(".wishlist-btn").forEach((btn) => {
             const card = btn.closest(".product-card");
@@ -1813,7 +1841,7 @@
       };
 
       const SearchManager = {
-        init: () => {
+        init: function () {
           const searchInput = document.getElementById("searchInput");
           const debouncedSearch = Utils.debounce((term) => {
             AppState.searchTerm = term;
@@ -1843,7 +1871,7 @@
       };
 
       const StatsManager = {
-        init: () => {
+        init: function () {
           const observer = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
@@ -1856,10 +1884,13 @@
             { threshold: 0.5 }
           );
 
-          observer.observe(document.querySelector(".stats"));
+          const statsSection = document.querySelector(".stats");
+          if (statsSection) {
+            observer.observe(statsSection);
+          }
         },
 
-        animateStats: () => {
+        animateStats: function () {
           if (!window.PRODUCT_DATA) return;
 
           const totalProducts = Object.values(
@@ -2037,7 +2068,7 @@
 
       // ===== EVENT HANDLERS =====
       const EventHandlers = {
-        init: () => {
+        init: function () {
           // Header scroll effect
           window.addEventListener("scroll", () => {
             const header = document.getElementById("header");
@@ -2132,7 +2163,7 @@
 
       // ===== INITIALIZATION =====
       const App = {
-        init: () => {
+        init: function () {
           // Check if product data is loaded
           if (!window.PRODUCT_DATA) {
             console.error(
@@ -2157,7 +2188,7 @@
           console.log("🚀 BStore Modern Ecommerce initialized successfully!");
         },
 
-        setupAnimations: () => {
+        setupAnimations: function () {
           const observerOptions = {
             threshold: 0.1,
             rootMargin: "0px 0px -50px 0px",
@@ -2173,7 +2204,7 @@
           }, observerOptions);
 
           // Observe elements for animation
-          setTimeout(() => {
+          setTimeout(function () {
             document
               .querySelectorAll(".category-card, .stat-item")
               .forEach((el, index) => {
@@ -2195,7 +2226,7 @@
       // Initialize app when DOM is loaded
       document.addEventListener("DOMContentLoaded", () => {
         // Wait a bit for products.js to load
-        setTimeout(App.init, 100);
+        setTimeout(App.init(), 100);
       });
     </script>
   </body>
