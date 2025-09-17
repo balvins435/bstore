@@ -952,18 +952,22 @@
 @media (max-width: 768px) {
   .nav {
     flex-direction: column;
-    align-items: flex-start; /* keep everything left-aligned */
+    align-items: flex-start; /* everything left-aligned */
   }
 
   .logo {
     font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
   }
 
   .nav-toggle {
     display: block;
-    margin-bottom: 1rem;
-    align-self: flex-start; /* ensures it's left-aligned under the logo */
+    margin: 0 0 1rem 0;  /* push it slightly below logo */
+    align-self: flex-start; /* pin it left under logo */
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 
   .nav-links {
@@ -981,6 +985,15 @@
 
   .nav-links li {
     margin: 0.5rem 0;
+  }
+
+  .search-container {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .search-bar input {
+    width: 100%;
   }
 }
 
@@ -1170,36 +1183,44 @@
     </div>
 
     <!-- Header -->
-    <header class="header" id="header">
-      <nav class="nav">
-        <div class="logo">BStore</div>
+<header class="header" id="header">
+  <nav class="nav">
+    <!-- Top row -->
+    <div class="nav-top">
+      <div class="logo">BStore</div>
 
-        <button class="nav-toggle" id="navToggle">☰</button>
+      <!-- Toggle for mobile -->
+      <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
 
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#categories">Categories</a></li>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+    <!-- Search bar (mobile separate row, desktop inline) -->
+    <div class="search-container">
+      <div class="search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          id="searchInput"
+        />
+        <div class="search-icon">🔍</div>
+      </div>
+    </div>
 
-          <li class="search-container">
-            <div class="search-bar">
-              <input
-                type="text"
-                placeholder="Search products..."
-                id="searchInput"
-              />
-              <div class="search-icon">🔍</div>
-            </div>
-          </li>
-        </ul>
+    <!-- Nav links -->
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
 
-        <button class="cart-btn" id="cartBtn">
-          🛒 <span class="cart-count" id="cartCount">0</span>
-        </button>
-      </nav>
-    </header>
+    <!-- Cart button -->
+    <button class="cart-btn" id="cartBtn">
+      🛒 <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </nav>
+</header>
+
 
     <!-- Hero Section -->
     <section class="hero" id="home">
