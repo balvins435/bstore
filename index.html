@@ -981,32 +981,134 @@
 
   .nav-links.active {
     display: flex;
+  }/* Mobile Search Container */
+.mobile-search-container {
+  display: none;
+  padding: 1rem 2rem 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Mobile Cart Button in Nav */
+.mobile-cart-item {
+  display: none;
+}
+
+.mobile-cart-btn {
+  background: var(--gradient-primary);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-cart-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.mobile-cart-btn:hover::before {
+  left: 100%;
+}
+
+.mobile-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Updated Mobile Styles */
+@media (max-width: 768px) {
+  .nav {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-toggle {
+    display: block;
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: var(--blur);
+    border-radius: 0 0 12px 12px;
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow-xl);
+    z-index: 1000;
+  }
+
+  .nav-links.active {
+    display: flex;
   }
 
   .nav-links li {
-    margin: 0.5rem 0;
+    margin: 0.75rem 0;
   }
 
+  .nav-links a {
+    font-size: 1.1rem;
+    padding: 0.75rem 0;
+  }
+
+  /* Show mobile cart item */
+  .mobile-cart-item {
+    display: block;
+    border-top: 1px solid var(--gray-200);
+    padding-top: 1rem;
+  }
+
+  /* Hide desktop cart and search */
+  .cart-btn,
   .search-container {
-    width: 100%;
-    margin-top: 0.5rem;
+    display: none;
   }
 
-  .search-bar input {
-    width: 100%;
+  /* Show mobile search */
+  .mobile-search-container {
+    display: block;
+  }
+
+  .header {
+    padding-bottom: 1rem;
   }
 }
-
-        .search-container {
-          order: 3;
-          margin-top: 1rem;
-          width: 100%;
-        }
-
-        .search-bar {
-          width: 100%;
-          min-width: auto;
-        }
 
         .hero {
           padding: 6rem 1rem 4rem;
@@ -1182,18 +1284,29 @@
       <div class="modern-spinner"></div>
     </div>
 
-    <!-- Header -->
+   <!-- Header -->
 <header class="header" id="header">
   <nav class="nav">
-    <!-- Top row -->
-    <div class="nav-top">
-      <div class="logo">BStore</div>
+    <div class="logo">BStore</div>
 
-      <!-- Toggle for mobile -->
-      <button class="nav-toggle" id="navToggle">☰</button>
-    </div>
+    <!-- Toggle for mobile -->
+    <button class="nav-toggle" id="navToggle">☰</button>
 
-    <!-- Search bar (mobile separate row, desktop inline) -->
+    <!-- Nav links -->
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li class="mobile-cart-item">
+        <button class="mobile-cart-btn" id="mobileCartBtn">
+          🛒 Cart <span class="cart-count" id="mobileCartCount">0</span>
+        </button>
+      </li>
+    </ul>
+
+    <!-- Search bar (desktop only) -->
     <div class="search-container">
       <div class="search-bar">
         <input
@@ -1205,20 +1318,23 @@
       </div>
     </div>
 
-    <!-- Nav links -->
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#categories">Categories</a></li>
-      <li><a href="#products">Products</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-
-    <!-- Cart button -->
+    <!-- Cart button (desktop only) -->
     <button class="cart-btn" id="cartBtn">
       🛒 <span class="cart-count" id="cartCount">0</span>
     </button>
   </nav>
+
+  <!-- Mobile search bar (separate section) -->
+  <div class="mobile-search-container">
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Search products..."
+        id="mobileSearchInput"
+      />
+      <div class="search-icon">🔍</div>
+    </div>
+  </div>
 </header>
 
 
